@@ -36,7 +36,7 @@ csvwriter = csv.writer(f)  # csv writer 객체 생성
 for i in searchList:
     csvwriter.writerow(i)
 
-f.close()  # CSV 파일 닫기
+f.close()  # CSV 파일 닫기ㅋ
 
 print('성공')  # 스크래핑 및 저장이 성공적으로 완료되었음을 알리는 메시지 출력
 
