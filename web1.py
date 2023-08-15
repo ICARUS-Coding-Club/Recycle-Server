@@ -38,4 +38,4 @@ csvwriter.writerow(searchList)
 
 f.close() # CSV 파일을 닫습니다.
 
-print('success') # 스크레이핑 및 저장이 성공적으로 완료되었음을 나타내는 메시지를 출력합니다.
+print('success') # 스크레이핑 및 저장이 성공적으로 완료되었음을 나타내는 메시지를 출력합니다
