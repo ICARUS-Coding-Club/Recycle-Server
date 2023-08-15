@@ -21,18 +21,23 @@ soup = BeautifulSoup(html, 'html.parser')
 total = soup.select(".entry-title")
 searchList = []
 
-# total에 담긴 각 요소에 대해 반복문으로 넣기
+# total 리스트 내의 각 요소에 대해
 for i in total:
-    temp=[]
-    temp.append(i.text)
-    searchList.append(temp)
+    temp = []               # 임시 리스트 생성
+    temp.append(i.text)     # 해당 요소의 텍스트(내용)를 임시 리스트에 추가
+    searchList.append(temp) # 임시 리스트를 searchList에 추가
 
-f=open(f'{search}.csv','w',encoding='utf-8',newline='')
-csvwriter=csv.writer(f)
+# CSV 파일을 쓰기 모드로 열기 (파일명은 사용자가 입력한 검색어로 지정)
+# 인코딩은 utf-8로 설정하며, newline='' 옵션은 줄바꿈 처리를 위해 사용
+f = open(f'{search}.csv', 'w', encoding='utf-8', newline='')
+csvwriter = csv.writer(f)  # csv writer 객체 생성
+
+# searchList의 각 요소(리스트)를 CSV 파일에 한 줄씩 쓰기
 for i in searchList:
     csvwriter.writerow(i)
 
-f.close()
+f.close()  # CSV 파일 닫기
 
-print('성공')
+print('성공')  # 스크래핑 및 저장이 성공적으로 완료되었음을 알리는 메시지 출력
+
 
