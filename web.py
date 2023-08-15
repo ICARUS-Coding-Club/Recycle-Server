@@ -1,4 +1,4 @@
-#필요한 모듈과 라이브러리들을 가져옴
+# 필요한 모듈과 라이브러리들을 가져옴
 import csv                       # CSV 파일을 처리하기 위한 모듈
 from urllib.request import urlopen  # 웹 사이트를 열고 읽기 위한 모듈
 from urllib.parse import quote_plus  # URL 인코딩을 위한 함수
@@ -21,6 +21,18 @@ soup = BeautifulSoup(html, 'html.parser')
 total = soup.select(".entry-title")
 searchList = []
 
-# total에 담긴 각 요소에 대해
+# total에 담긴 각 요소에 대해 반복문으로 넣기
 for i in total:
-    print(i.text)
+    temp=[]
+    temp.append(i.text)
+    searchList.append(temp)
+
+f=open(f'{search}.csv','w',encoding='utf-8',newline='')
+csvwriter=csv.writer(f)
+for i in searchList:
+    csvwriter.writerow(i)
+
+f.close()
+
+print('성공')
+
