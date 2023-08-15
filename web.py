@@ -1,4 +1,4 @@
-# 필요한 모듈과 라이브러리들을 가져옴
+#필요한 모듈과 라이브러리들을 가져옴
 import csv                       # CSV 파일을 처리하기 위한 모듈
 from urllib.request import urlopen  # 웹 사이트를 열고 읽기 위한 모듈
 from urllib.parse import quote_plus  # URL 인코딩을 위한 함수
