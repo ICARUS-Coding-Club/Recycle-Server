@@ -3,7 +3,7 @@ import pandas as pd
 import glob
 
 # merge_df라는 빈 DataFrame을 초기화합니다.
-# 이 DataFrame은 각 Excel 파일의 데이터를 추가하기 위해 사용됩니다.
+# 이 DataFrame은 각 Excel 파일의 데이터를 추가하기 위해 사용됩니다
 merge_df = pd.DataFrame()
 
 # glob.glob를 사용하여 지정된 디렉터리에서 "d_*.xlsx"라는 이름 패턴과 일치하는 모든 Excel 파일을 가져옵니다
