@@ -9,7 +9,7 @@ merge_df = pd.DataFrame()
 # glob.glob를 사용하여 지정된 디렉터리에서 "d_*.xlsx"라는 이름 패턴과 일치하는 모든 Excel 파일을 가져옵니다.
 # 이는 d_1.xlsx, d_2.xlsx 등의 파일 세트가 있을 때 유용합니다.
 for f in glob.glob(r'C:\Users\kmg00\Desktop\생활쓰레기배출정보\d_*.xlsx'):
-    # 파일 목록의 각 Excel 파일을 df라는 DataFrame으로 읽습니다.
+    # 파일 목록의 각 Excel 파일을 df라는 DataFrame으로 읽습니다
     df = pd.read_excel(f)
 
     # df의 데이터를 merge_df에 추가합니다.
