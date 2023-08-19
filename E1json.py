@@ -44,6 +44,5 @@ try:
 except Exception as e:
     print(f"Error while saving to {json_f}: {e}")
 
-print(data)
 
 print('성공')
