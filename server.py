@@ -37,7 +37,7 @@ def upload_image():
 
     image_file = request.files['image']
 
-    # 만약 'uid'라는 추가 필드가 필요하다면 다음과 같이 추출할 수 있습니다.
+    # 만약 'uid'라는 추가 필드가 필요하다면 다음과 같이 추출할 수 있습니다
     # uid_data = request.form.get('uid')
     # 여기서는 이미지 파일명을 UID로 사용합니다.
     uid_data = secure_filename(image_file.filename)
