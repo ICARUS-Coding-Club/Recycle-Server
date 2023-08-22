@@ -1,42 +1,42 @@
 from selenium import webdriver
-import csv
 import time
 from selenium.webdriver.common.by import By
-from urllib.parse import quote_plus # URL을 인코딩하기 위한 함수
+from urllib.parse import quote_plus
+import pandas as pd
 
-search=input("쓰레기종류:")
+# 사용자로부터 쓰레기 종류를 입력받습니다.
+search = input("쓰레기 종류: ")
+
+# 크롬 웹드라이버를 실행하여 blisgo.com 웹사이트에 접속합니다.
 driver = webdriver.Chrome()
 driver.get(f'https://blisgo.com/category/{quote_plus(search)}/')
 
+# 페이지 내의 '더 보기' 버튼의 CSS 선택자를 정의합니다.
 css_selector = "#primary > nav > span"
 element = driver.find_element(By.CSS_SELECTOR, css_selector)
 
+# '더 보기' 버튼을 10번 클릭합니다.
 for i in range(10):
     time.sleep(3)
     element.click()
 
-totals = driver.find_elements(By.CSS_SELECTOR, ".entry-title")  # Note the use of find_elements
+# 페이지 내의 모든 항목의 제목을 수집합니다.
+totals = driver.find_elements(By.CSS_SELECTOR, ".entry-title")
 searchList = []
 
-# Iterate through the list of entry titles
 for total in totals:
-    temp = []
-    temp.append(total.text)
-    searchList.append(temp)
+    searchList.append(total.text)
 
-print(searchList)  # You probably meant to print searchList, not temp
+print(searchList)
 
+# 크롤링이 끝나면 일정 시간 후에 웹드라이버를 종료합니다.
 time.sleep(100)
 driver.quit()
 
-# CSV 파일을 쓰기 모드로 엽니다.
-# 인코딩은 utf-8로 설정하고, newline='' 옵션은 줄 바꿈을 처리하기 위해 사용됩니다.
-f = open(f'{search}.csv', 'w', encoding='utf-8', newline='')
-csvwriter = csv.writer(f) # csv 작성 객체를 생성합니다.
+# 수집한 데이터를 pandas DataFrame으로 변환합니다.
+df = pd.DataFrame({search: searchList})
 
-# searchList를 펼쳐서 CSV 파일에 한 행으로 작성합니다.
-csvwriter.writerow(searchList)
+# DataFrame을 Excel 파일로 저장합니다.
+df.to_excel(f'{search}.xlsx', index=False, engine='xlsxwriter')
 
-f.close() # CSV 파일을 닫습니다.
-
-print('success') # 스크레이핑 및 저장이 성공적으로 완료되었음을 나타내는 메시지를 출력합니다
+print('success')
