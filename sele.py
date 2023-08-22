@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from urllib.parse import quote_plus
 import pandas as pd
 
-# 사용자로부터 쓰레기 종류를 입력받습니다.
+# 사용자로부터 쓰레기 종류를 입력받습니다
 search = input("쓰레기 종류: ")
 
 # 크롬 웹드라이버를 실행하여 blisgo.com 웹사이트에 접속합니다.
