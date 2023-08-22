@@ -69,7 +69,7 @@ def serve_image2():
 # Flask의 route 데코레이터를 사용하여 '/배출정보' 엔드포인트에 대한 처리를 정의합니다.
 @app.route('/배출정보')
 def dbhw():
-    # 커서를 사용하여 데이터베이스 연결을 엽니다.
+    # 커서를 사용하여 데이터베이스 연결을 엽니다..
     with conn.cursor() as curs:
         # household_waste 테이블에서 모든 데이터를 선택하는 SQL 쿼리를 정의합니다.
         sql = "SELECT * FROM household_waste"
