@@ -13,4 +13,4 @@ def excel_to_json(input_filename, json_output_filename):
         json.dump(records, json_file, ensure_ascii=False, indent=4)
 
 # 액셀 json 파일 경로
-excel_to_json(r'C:\Users\kmg00\Desktop\생활쓰레기종합배출정보.xlsx', r'C:\Users\kmg00\Desktop\Rdata\output.json')
+excel_to_json(r'C:\Users\kmg00\Desktop\Rdata\2128.xlsx', r'C:\Users\kmg00\Desktop\Rdata\2128.json')

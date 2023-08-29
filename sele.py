@@ -17,6 +17,9 @@ driver.get(f'https://blisgo.com/category/{quote_plus(search)}/')
 # 페이지 내의 '더 보기' 버튼의 CSS 선택자를 정의합니다.
 css_selector = "#primary > nav > span"
 element = driver.find_element(By.CSS_SELECTOR, css_selector)
+#post-7658 > div > div > div.ast-blog-featured-section.post-thumb.ast-col-md-12 > div > a > img
+#post-6360 > div > div > div.ast-blog-featured-section.post-thumb.ast-col-md-12 > div > a > img
+#post-5945 > div > div > div.ast-blog-featured-section.post-thumb.ast-col-md-12 > div > a > img
 
 # '더 보기' 버튼을 10번 클릭합니다.
 for i in range(10):
