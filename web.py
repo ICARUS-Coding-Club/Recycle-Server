@@ -50,7 +50,7 @@ for i in searchList:
 
 f.close()  # CSV 파일 닫기ㅋ
 
-print('성공')  # 스크래핑 및 저장이 성공적으로 완료되었음을 알리는 메시지 출력
+print('성공')  # 스크래핑 및 저장이 성공적으로 완료되었음을 알리는 메시지 출
 
 time.sleep(100)  # waits for 10 seconds
 driver.quit()
