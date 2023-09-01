@@ -1,41 +1,60 @@
-import csv # CSV 파일 처리를 위한 모듈
-from urllib.request import urlopen # 웹사이트를 열고 읽기 위한 모듈
-from urllib.parse import quote_plus # URL을 인코딩하기 위한 함수
-from bs4 import BeautifulSoup # 웹 스크레이핑을 위한 라이브러리
+import urllib.request
+from bs4 import BeautifulSoup
+import json
 
-# 사용자로부터 검색어를 입력받습니다.
-trash=input('무슨 쓰레기인가요')
-search = input('쓰레기 종류를 입력하세요:')
-search1=input('쓰레기 검색:')
 
-# 입력된 검색어로 blisgo.com 웹사이트의 URL을 생성합니다.
-# quote_plus를 사용하여 쿼리를 URL로 인코딩합니다.
-url = f'https://blisgo.com/{quote_plus(search)}/{quote_plus(search1)}/'
+def get_article(links):
+    req = urllib.request.Request(links, headers={'User-Agent': 'Mozilla/5.0'})
+    sourcecode = urllib.request.urlopen(req).read()
+    soup = BeautifulSoup(sourcecode, "html.parser")
 
-# 생성된 URL의 웹페이지를 열고 내용을 읽습니다.
-html = urlopen(url).read()
+    title = soup.select_one(".media_end_head_headline")
+    time_data = soup.select_one(".media_end_head_info_datestamp_time._ARTICLE_DATE_TIME")
+    body = soup.select_one(".go_trans._article_content")
+    image = soup.select_one("img[src^='https://imgnews.pstatic.net/image/']")
 
-# BeautifulSoup 객체를 생성합니다. HTML을 파싱하기 위해.
-soup = BeautifulSoup(html, 'html.parser')
+    article_data = {}
 
-# 'entry-title' 클래스를 가진 모든 요소를 가져옵니다.
-total1 = soup.select('.elementor-text-editor.elementor-clearfix')
 
-searchList = []
 
-searchList.append(trash)
+    if title:
+        article_data['제목'] = title.text
+    if time_data:
+        article_data['시간'] = time_data.text
+    if body:
+        article_data['본문'] = body.text
+    if image:
+        article_data['이미지'] = image['src']
 
-for i in total1[:4]:
-    searchList.append(i.text)
+    image_element = soup.find("img", class_="._LAZY_LOADING")
+    if image_element and 'src' in image_element.attrs:
+        image_src = image_element["src"]
+        print(image_src)
+    else:
+        print("No src found or no matching img element found.")
 
-# CSV 파일을 쓰기 모드로 엽니다.
-# 인코딩은 utf-8로 설정하고, newline='' 옵션은 줄 바꿈을 처리하기 위해 사용됩니다.
-f = open(f'{trash}.csv', 'w', encoding='utf-8', newline='')
-csvwriter = csv.writer(f) # csv 작성 객체를 생성합니다.
+    #print(article_data)
 
-# searchList를 펼쳐서 CSV 파일에 한 행으로 작성합니다.
-csvwriter.writerow(searchList)
+    return article_data
 
-f.close() # CSV 파일을 닫습니다.
 
-print('success') # 스크레이핑 및 저장이 성공적으로 완료되었음을 나타내는 메시지를 출력합니다
+
+url = "https://search.naver.com/search.naver?where=news&sm=tab_pge&query=%EC%9E%AC%ED%99%9C%EC%9A%A9%20%ED%99%98%EA%B2%BD&sort=0&photo=0&field=0&pd=0&ds=&de=&cluster_rank=516&mynews=0&office_type=0&office_section_code=0&news_office_checked=&office_category=0&service_area=0&nso=so:r,p:all,a:all&start=1"
+req = urllib.request.Request(url)
+sourcecode = urllib.request.urlopen(req).read()
+soup = BeautifulSoup(sourcecode, "html.parser")
+
+articles_list = []
+
+for li in soup.find_all("li", class_="bx"):
+    info_group = li.find("div", class_="info_group")
+    if info_group:
+        navernews_link = info_group.find("a", string="네이버뉴스")
+        if navernews_link:
+            article_data = get_article(navernews_link["href"])
+            if article_data:
+                articles_list.append(article_data)
+
+# 리스트를 JSON 형태로 파일에 저장
+with open('환경정보.json', 'w', encoding='utf-8') as f:
+    json.dump(articles_list, f, ensure_ascii=False, indent=4)
