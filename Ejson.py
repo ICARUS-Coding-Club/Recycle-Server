@@ -12,5 +12,5 @@ def excel_to_json(input_filename, json_output_filename):
     with open(json_output_filename, 'w', encoding='utf-8') as json_file:
         json.dump(records, json_file, ensure_ascii=False, indent=4)
 
-# 액셀 json 파일 경로
+# 액셀 json파일 경로
 excel_to_json(r'C:\Users\kmg00\Desktop\Rdata\2128.xlsx', r'C:\Users\kmg00\Desktop\Rdata\2128.json')
