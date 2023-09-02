@@ -25,7 +25,7 @@ driver.get(f'https://blisgo.com/category/{quote_plus(search)}/')
 css_selector = "#primary > nav > span"
 element = driver.find_element(By.CSS_SELECTOR, css_selector)
 
-# '더 보기' 버튼을 최대 10번 클릭하여 콘텐츠를 더 로드합니다.
+# '더 보기' 버튼을 최대 10번 클릭하여 콘텐츠를 더 로드합니다
 for i in range(10):
     try:
         # '더 보기' 버튼이 클릭 가능해질 때까지 기다린 후 클릭합니다.
