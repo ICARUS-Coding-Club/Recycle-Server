@@ -2,12 +2,9 @@
 from flask import Flask, json, jsonify, request, Response, send_from_directory, render_template
 import pymysql
 from PIL import Image
-
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 from werkzeug.utils import secure_filename
-
 import os
-
 import queue
 import threading
 
@@ -174,7 +171,36 @@ def dbhw():
     num = road_data
 
     with conn.cursor() as curs:
-        sql = f"""SELECT * FROM household_waste WHERE `번호` = {num}"""
+        sql = f"""
+        SELECT
+        `번호`,
+        `시도명`,
+        `시군구명`,
+        `관리구역명`,
+        `관리구역대상지역명`,
+        `배출장소유형`,
+        `배출장소`,
+        `생활쓰레기배출방법`,
+        `음식물쓰레기배출방법`,
+        `재활용품배출방법`,
+        REPLACE(`생활쓰레기배출요일`, '+', ',') AS `생활쓰레기배출요일`,
+        REPLACE(`음식물쓰레기배출요일`, '+', ',') AS `음식물쓰레기배출요일`,
+        REPLACE(`재활용품배출요일`, '+', ',') AS `재활용품배출요일`,
+        `생활쓰레기배출시작시각`,
+        `생활쓰레기배출종료시각`,
+        `음식물쓰레기배출시작시각`,
+        `음식물쓰레기배출종료시각`,
+        `재활용품배출시작시각`,
+        `재활용품배출종료시각`,
+        `미수거일`,
+        `관리부서전화번호`,
+        `데이터기준일자`
+        FROM 
+            household_waste
+        WHERE 
+            `번호` = {num};
+        """
+
         curs.execute(sql)
 
         rows = curs.fetchall()
@@ -185,15 +211,8 @@ def dbhw():
         for row in rows:
             row_dict = dict(zip(columns, row))
 
-            # timedelta 객체를 HH:MM 형식으로 변환
-            for key in ['생활쓰레기배출시작시각', '생활쓰레기배출종료시각', '음식물쓰레기배출시작시각', '음식물쓰레기배출종료시각', '재활용품배출시작시각', '재활용품배출종료시각']:
-                if isinstance(row_dict[key], timedelta):
-                    total_seconds = row_dict[key].total_seconds()
-                    hours = int(total_seconds // 3600)
-                    minutes = int((total_seconds % 3600) // 60)
-                    row_dict[key] = f"{hours:02}:{minutes:02}"
 
-            # datetime.date 객체를 문자열로 변환
+            #datetime.date 객체를 문자열로 변환
             if isinstance(row_dict['데이터기준일자'], date):  # datetime.date 대신 date만 사용합니다.
                 row_dict['데이터기준일자'] = row_dict['데이터기준일자'].strftime('%Y-%m-%d')
 
@@ -304,4 +323,8 @@ worker = threading.Thread(target=process_tasks)
 worker.start()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8887, debug=True, threaded=True)
+    try:
+        app.run(host='0.0.0.0', port=8887, debug=True, threaded=True)
+    except Exception as e:
+        print(f"Flask 앱 실행 중 오류: {e}")
+
