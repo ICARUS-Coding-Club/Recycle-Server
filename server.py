@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, json, jsonify, request, Response, send_from_directory, render_template
+from flask import Flask, json, jsonify, request, Response, render_template
 import pymysql
 from PIL import Image
 from datetime import datetime, date
-from werkzeug.utils import secure_filename
 import os
 import queue
 import threading
@@ -67,18 +66,6 @@ def upload_image():
     add_task(uid_data)
     # 성공 메시지와 이미지가 저장된 경로로 응답
     return jsonify({"message": "이미지가 성공적으로 저장되었습니다!", "path": filename})
-
-
-# 폴더에 있는 모든 이미지 서빙
-@app.route('/image/<uid>')
-def serve_image1(uid):
-    return send_from_directory(r'C:\\Users\\kmg00\\Desktop\\image', uid)
-
-
-# 특정이미지 서빙^^
-@app.route('/image/<uid>/<image_name>')
-def serve_image2(uid, image_name):
-    return send_from_directory(r'C:\\Users\\kmg00\\Desktop\\image', uid, image_name.png)
 
 
 @app.route('/trashes', methods=['GET'])
@@ -267,7 +254,6 @@ def household_waste_send():
     conn.commit()
     return "Success"
 
-
 # Json 쓰레기정보 데이터 Mysql에 저장
 @app.route('/insert/trashform', methods=['POST', 'GET'])
 def trashform_send():
@@ -298,9 +284,6 @@ def trashform_send():
 def add_task(uid):
     # 요청을 대기열에 추가
     task_queue.put(uid)
-
-    return jsonify({'status': 'task added'}), 200
-
 
 def process_tasks():
     while True:
