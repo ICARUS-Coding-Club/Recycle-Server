@@ -1,25 +1,20 @@
-# 필요한 라이브러리를 가져옵니다.
 import pandas as pd
+import os
 import glob
 
-# merge_df라는 빈 DataFrame을 초기화합니다.
-# 이 DataFrame은 각 Excel 파일의 데이터를 추가하기 위해 사용됩니다
-merge_df = pd.DataFrame()
+# 폴더 내의 모든 CSV 파일 가져오기
+folder_path = 'C:\\Users\\kmg00\\Desktop\\데이터 변'
+file_pattern = os.path.join(folder_path, 'd_*.csv')
 
-# glob.glob를 사용하여 지정된 디렉터리에서 "d_*.xlsx"라는 이름 패턴과 일치하는 모든 Excel 파일을 가져옵니다
-# 이는 d_1.xlsx, d_2.xlsx 등의 파일 세트가 있을 때 유용합니다.
-for f in glob.glob(r'C:\Users\kmg00\Desktop\생활쓰레기배출정보\d_*.xlsx'):
-    # 파일 목록의 각 Excel 파일을 df라는 DataFrame으로 읽습니다
-    df = pd.read_excel(f)
+all_files = glob.glob(file_pattern)
 
-    # df의 데이터를 merge_df에 추가합니다.
-    # ignore_index=True는 인덱스가 재설정되도록 하므로
-    # 병합된 DataFrame에서 중복 인덱스가 발생하지 않습니다.
-    merge_df = merge_df.append(df, ignore_index=True)
+# 모든 CSV 파일을 읽어서 하나의 DataFrame으로 병합
+all_dataframes = []
+for file in all_files:
+    df = pd.read_csv(file, encoding='cp949')  # 여기서 필요한 인코딩을 설정하세요.
+    all_dataframes.append(df)
 
-# 병합된 DataFrame을 콘솔에 출력합니다.
-print(merge_df)
+merged_dataframe = pd.concat(all_dataframes, axis=0)
 
-# 병합된 DataFrame을 지정된 디렉터리에 Excel 파일로 저장합니다.
-merge_df.to_excel(r'C:\Users\kmg00\Desktop\생활쓰레기종합배출정보.xlsx')
-
+# 병합된 결과를 새로운 CSV 파일로 저장
+merged_dataframe.to_csv('C:\\Users\\kmg00\\Desktop\\데이터 변\\분리수거쓰레기.csv', index=False)
