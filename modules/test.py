@@ -16,5 +16,5 @@ def csv_to_json(csv_filename, json_filename):
         json.dump(data, json_file, ensure_ascii=False, indent=4)
 
 # 사용 예시
-csv_to_json(r'C:\Users\kmg00\Desktop\데이터 변\분리수거쓰레기.csv', r'C:\Users\kmg00\Desktop\데이터\data.json')
+csv_to_json(r'C:\Users\kmg00\Desktop\분리수거.csv', r'C:\Users\kmg00\Desktop\데이터\분리수거.json')
 

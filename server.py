@@ -117,7 +117,6 @@ def upload_image():
                 row_dict = dict(zip(columns, row))
                 result.append(row_dict)
 
-    print(result)
     return jsonify(result)
 
 
@@ -150,7 +149,7 @@ def trashes_send():
             except ValueError:
                 pass  # 숫자로 변환할 수 없는 값은 무시합니다.
         return jsonify(result)
-#
+#쓰레기정보 주기
 @app.route('/trashes', methods=['GET'])
 def trashes():
     # 데이터베이스 연결을 커서를 통해 수행합니다.
@@ -179,6 +178,7 @@ def trashes():
 
         # 최종적으로 생성된 딕셔너리 리스트를 JSON 형태로 반환합니다.
         return jsonify(result)
+#인공지능 모델 결과에 맞는 데이터 주기
 @app.route('/category', methods=['GET'])
 def category():
     category_data = request.args.get('name')
@@ -229,8 +229,39 @@ def view_int():
         conn.close()  # 연결을 종료합니다.
 
         return jsonify({"updated_value": updated_value})
+#네이버뉴스 보내기
+@app.route('/news_send',methods=['GET'])
+def news():
+    with conn.cursor() as curs:
 
+        # 'trashform' 테이블에서 모든 데이터를 가져오는 SQL 쿼리를 작성합니다.
+        sql = """
+            SELECT
+                `id`,
+                `title`,
+                `time`,
+                REPLACE(REPLACE(`body`, '\n', ''), '\t', '') AS `body`,
+                `reporter`,
+                `image`
+            FROM news_information
+        """
 
+        curs.execute(sql)  # 위에서 정의한 SQL 쿼리를 실행합니다.
+
+        rows = curs.fetchall()  # 쿼리의 결과로 반환된 모든 행을 가져옵니다.
+
+        # 커서의 description 속성을 사용하여 테이블의 컬럼 이름들을 가져옵니다.
+        columns = [desc[0] for desc in curs.description]
+
+        result = []
+        # 반환된 행들을 순회하며,
+        # 각 행의 데이터와 컬럼 이름을 딕셔너리로 매핑하고 이를 결과 리스트에 추가합니다.
+        for row in rows:
+            row_dict = dict(zip(columns, row))
+            # datetime.date 객체를 문자열로 변환
+            result.append(row_dict)
+        # 최종적으로 생성된 딕셔너리 리스트를 JSON 형태로 반환합니다.
+        return jsonify(result)
 # 시도명 시군구명 관리구역대상지역 관리구역명
 @app.route('/dbwt', methods=['POST', 'GET'])
 def dbwt():
@@ -425,7 +456,28 @@ def trashform_send():
     conn.commit()
     return "Success"
 
+#Json 네이버뉴스 데어터 MySQL 저장
+@app.route('/insert/news', methods=['POST', 'GET'])
+def news_send():
+    curs = conn.cursor()
+    with open('C:/Users/kmg00/Desktop/데이터/분리수거.json', 'r', encoding='utf-8') as f:
 
+        json_data = json.load(f)
+
+        for news in json_data:
+            sql = "INSERT INTO news_information(`id`,`title`,`time`,`body`,`reporter`,`image`) VALUES (%s,%s,%s,%s,%s,%s)"
+            val = (
+                news["id"],
+                news["title"],
+                news["time"],
+                news["body"],
+                news["reporter"],
+                news["image"],
+            )
+            curs.execute(sql, val)
+
+    conn.commit()
+    return "Success"
 def add_task(uid, listener: OnImageListener):
     # 요청을 대기열에 추가
     task_queue.put([uid, listener])

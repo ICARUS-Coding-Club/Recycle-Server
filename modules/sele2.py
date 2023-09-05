@@ -65,5 +65,5 @@ for li in soup.find_all("li", class_="bx"):
                 articles_list.append(article_data)
 
 # 리스트를 JSON 형태로 파일에 저장
-with open('articles.json', 'w', encoding='utf-8') as f:
-    json.dump(articles_list, f, ensure_ascii=False, indent=4)
+#with open('articles.json', 'w', encoding='utf-8') as f:
+    #json.dump(articles_list, f, ensure_ascii=False, indent=4)
