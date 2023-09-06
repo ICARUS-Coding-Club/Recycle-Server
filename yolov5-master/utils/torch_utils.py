@@ -66,7 +66,7 @@ def smart_DDP(model):
 def reshape_classifier_output(model, n=1000):
     # Update a TorchVision classification model to class count 'n' if required
     from models.common import Classify
-    name, m = list((model.model if hasattr(model, 'model') else model).named_children())[-1]  # last module
+    name, m = list((model.model if hasattr(model, 'model') else model).named_children())[-1]  # last modules
     if isinstance(m, Classify):  # YOLOv5 Classify() head
         if m.linear.out_features != n:
             m.linear = nn.Linear(m.linear.in_features, n)
@@ -222,7 +222,7 @@ def initialize_weights(model):
 
 
 def find_modules(model, mclass=nn.Conv2d):
-    # Finds layer indices matching module class 'mclass'
+    # Finds layer indices matching modules class 'mclass'
     return [i for i, m in enumerate(model.module_list) if isinstance(m, mclass)]
 
 
