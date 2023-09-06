@@ -33,7 +33,7 @@ def detectTrash(id):
     os.system(command)
 
     result = []
-    # 파일을 읽기 모드로 엽니다.
+    # 파일을 읽기 모드로 엽니다
     with open(file_path, "r", encoding="utf-8") as file:
         # 파일의 각 줄을 순회하면서 데이터를 처리합니다.
         for line in file:
