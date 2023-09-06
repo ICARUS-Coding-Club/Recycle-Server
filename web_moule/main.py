@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import time
 
-from web1_moule.create_driver import create_driver
+from web_moule.create_driver import create_driver
 
 
 def get_naver_news_titles_and_contents(driver, url):
