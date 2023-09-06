@@ -9,7 +9,6 @@ import threading
 
 from util import detectTrash
 from modules.OnImageListener import OnImageListener
-from threading import Thread
 
 # template_folder daum.html경로
 app = Flask(__name__, template_folder=r'C:\Users\kmg00\PycharmProjects\Recycle-Server')
