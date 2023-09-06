@@ -456,7 +456,7 @@ def trashform_send():
     conn.commit()
     return "Success"
 
-#Json 네이버뉴스 데어터 MySQL 저장
+#Json 네이버뉴스 데이터 MySQL 저장
 @app.route('/insert/news', methods=['POST', 'GET'])
 def news_send():
     curs = conn.cursor()
