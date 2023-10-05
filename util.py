@@ -29,7 +29,7 @@ def detectTrash(id):
         file.write("")
 
     # 이미지 판별
-    command = rf"python ./yolov5-master/detect.py --weights ./yolov5-master/runs/train/model01/weights/best.pt --img 640 --conf 0.5 --source ./images/{user_id}.png --save-txt --name trash --exist-ok"
+    command = rf"python ./yolov5-master/detect.py --weights ./yolov5-master/runs/train/yolov5_trash_final/weights/best.pt --img 640 --conf 0.5 --source ./images/{user_id}.png --save-txt --name trash --exist-ok"
     os.system(command)
 
     result = []
