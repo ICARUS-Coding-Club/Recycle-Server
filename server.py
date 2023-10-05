@@ -491,9 +491,6 @@ def process_tasks():
         listener = item[1]
 
         # 실제 작업 처리 로직 (예: 5초 지연)
-        os.system(
-            '  python ./yolov5-master/detect.py --weights ./yolov5-master/runs/train/model01/weights/best.pt'
-            f' --img 640 --conf 0.5 --source ./images/{task}.png')
 
         trash_list = detectTrash(task)
 
