@@ -10,7 +10,7 @@ anchors:
 
 # YOLOv3-tiny backbone
 backbone:
-  # [from, number, modules, args]
+  # [from, number, module, args]
   [[-1, 1, Conv, [16, 3, 1]],  # 0
    [-1, 1, nn.MaxPool2d, [2, 2, 0]],  # 1-P1/2
    [-1, 1, Conv, [32, 3, 1]],
