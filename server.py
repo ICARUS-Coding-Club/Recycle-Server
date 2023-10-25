@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, json, jsonify, request, render_template
+from flask import Flask, json, jsonify, request, render_template, send_from_directory
 import pymysql
 from PIL import Image
 from datetime import datetime, date
 import os
 import queue
 import threading
+import random
 
 from util import detectTrash
 from modules.OnImageListener import OnImageListener
@@ -30,6 +31,7 @@ else:
     print('disconnected')
 # 저장할 경로
 UPLOAD_FOLDER = r'C:\Users\kmg00\PycharmProjects\Recycle-Server\images'
+UPLOAD_IMAGE=r'C:\Users\kmg00\PycharmProjects\Recycle-Server\server_image'
 
 # 작업 대기열 선언
 task_queue = queue.Queue()
@@ -53,6 +55,36 @@ class LocalImageProcessor(OnImageListener):
 # 클라이언트에서 보낸 바이트배열를 이미지로 변환하고 서버에 저장
 # post: 데이터를 받거나 추가하는 요청
 # get: 클라이언트가 서버에 데이터를 요청
+
+#숫자받은만큼 랜덤으로 쓰레기 보내기
+@app.route('/random_trash_send', methods=['GET'])
+def ramdom_trash_send():
+
+    trash_data = request.args.get('random_id')
+    int_data=int(trash_data)
+    data = list(range(1, 243))
+    number = random.sample(data, int_data)
+
+
+    with conn.cursor() as curs:
+        sql = f"""SELECT *
+                 FROM trashform
+                 WHERE id LIKE '%{number}%'
+                 """
+
+        curs.execute(sql)  # SQL 쿼리를 실행합니다.
+
+        rows = curs.fetchall()
+
+        columns = [desc[0] for desc in curs.description]
+
+        result = []
+        # 각 행을 순회하면서 딕셔너리 형태로 변환하여 결과 리스트에 추가합니다.
+        for row in rows:
+            row_dict = dict(zip(columns, row))
+            result.append(row_dict)
+
+    return jsonify(result)
 
 # 이미지 받기
 @app.route('/upload', methods=['POST'])
@@ -319,7 +351,6 @@ def dbwt():
                 row_dict = dict(zip(columns, row))
                 result.append(row_dict)
 
-        print(result)
         return jsonify(result)
 
 
@@ -385,6 +416,11 @@ def dbhw():
 def Zip_code():
     return render_template('daum.html')
 
+# 이미지 서버 생성
+@app.route('/image_server/<filename>',methods=['GET'])
+def image_server(filename):
+    # 지정된 파일명의 이미지를 반환합니다.
+    return send_from_directory(UPLOAD_IMAGE,filename)
 
 # Json 생활쓰레기종합배출정보 데이터 Mysql에 저장
 @app.route('/insert/household_waste', methods=['POST', 'GET'])
