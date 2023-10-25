@@ -59,20 +59,25 @@ class LocalImageProcessor(OnImageListener):
 #숫자받은만큼 랜덤으로 쓰레기 보내기
 @app.route('/random_trash_send', methods=['GET'])
 def ramdom_trash_send():
-
     trash_data = request.args.get('random_id')
     int_data=int(trash_data)
-    data = list(range(1, 243))
-    number = random.sample(data, int_data)
 
 
     with conn.cursor() as curs:
-        sql = f"""SELECT *
-                 FROM trashform
-                 WHERE id LIKE '%{number}%'
-                 """
 
-        curs.execute(sql)  # SQL 쿼리를 실행합니다.
+        curs.execute(f"""SELECT id FROM trashform WHERE type IN('분류: 비닐류', '분류: 유리', '분류: 캔류', '분류: 플라스틱', '분류: 페트', '분류: 종이');""")
+        id=curs.fetchall()
+
+        id_list = [id_tuple[0] for id_tuple in id]
+
+
+        number = random.sample(id_list, int_data)
+
+
+
+        placeholders = ', '.join(['%s'] * len(number))
+        sql = f"""SELECT * FROM trashform WHERE id IN ({placeholders});"""
+        curs.execute(sql, tuple(number))
 
         rows = curs.fetchall()
 
@@ -293,6 +298,7 @@ def news():
             result.append(row_dict)
         # 최종적으로 생성된 딕셔너리 리스트를 JSON 형태로 반환합니다.
         return jsonify(result)
+
 # 시도명 시군구명 관리구역대상지역 관리구역명
 @app.route('/dbwt', methods=['POST', 'GET'])
 def dbwt():
@@ -417,7 +423,7 @@ def Zip_code():
     return render_template('daum.html')
 
 # 이미지 서버 생성
-@app.route('/image_server/<filename>',methods=['GET'])
+@app.route('/image_server/<filename>')
 def image_server(filename):
     # 지정된 파일명의 이미지를 반환합니다.
     return send_from_directory(UPLOAD_IMAGE,filename)
@@ -472,7 +478,7 @@ def trashform_send():
         efile = json_data['trashform']
 
         for trashform in efile:
-            sql = "INSERT INTO trashform (`id`,`name`,`tags`,`recycle_able`,`type`,`method`,`etc`,`views`,`image`,`date`,`category`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO trashform (`id`,`name`,`tags`,`recycle_able`,`type`,`method`,`etc`,`image`,`date`,`category`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             val = (
                 trashform["id"],
                 trashform["name"],
@@ -481,7 +487,6 @@ def trashform_send():
                 trashform["type"],
                 trashform["method"],
                 trashform["etc"],
-                trashform["views"],
                 trashform["image"],
                 current_date,
                 trashform["category"]
@@ -525,7 +530,6 @@ def process_tasks():
         task = item[0]
         listener = item[1]
 
-        # 실제 작업 처리 로직 (예: 5초 지연)
 
         trash_list = detectTrash(task)
 
