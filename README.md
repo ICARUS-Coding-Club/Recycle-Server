@@ -44,6 +44,15 @@
     
 </br>
 
+## 라이선스
+
+[Retrofit](https://square.github.io/retrofit/#license)    
+[Flask](https://flask-docs-kr.readthedocs.io/ko/latest/license.html)    
+[MySql](https://redresscompliance.com/mysql-license-a-complete-guide-to-licensing/)    
+[Daum API](https://postcode.map.daum.net/guide)  
+
+<br/>
+
 ## 개발 환경
 
 ```bash
