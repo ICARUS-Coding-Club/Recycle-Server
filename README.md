@@ -48,7 +48,7 @@
 
 [Retrofit : Apache License 2.0](https://square.github.io/retrofit/#license)    
 [Flask : BSD 3-Clause](https://flask.palletsprojects.com/en/3.0.x/license/)    
-[MySql : GPL 3.0](https://www.gnu.org/licenses/)   
+[MySql : GPL 2.0](https://redresscompliance.com/mysql-license-a-complete-guide-to-licensing/)   
 
 <br/>
 
