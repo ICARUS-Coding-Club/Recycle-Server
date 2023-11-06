@@ -241,30 +241,33 @@ def category():
             result.append(row_dict)
 
         return jsonify(result)
-#조회수
-@app.route('/views', methods=['GET'])
-def view_int():
+#블로그캠페인
+@app.route('/blog_send',methods=['GET'])
+def blog():
     with conn.cursor() as curs:
+        sql = """
+                    SELECT
+                        *
+                    FROM blog_information
+                """
+        curs.execute(sql)  # 위에서 정의한 SQL 쿼리를 실행합니다.
 
-        # 웹 요청에서 'views' 파라미터를 가져옵니다.
-        id_data = request.args.get('views', type=int)
-        if not id_data:
-            return "Missing 'views' parameter", 400
+        rows = curs.fetchall()  # 쿼리의 결과로 반환된 모든 행을 가져옵니다.
 
-        curs.execute("SELECT * FROM trashform WHERE id=%s", (id_data,))
-        row = curs.fetchone()
+        # 커서의 description 속성을 사용하여 테이블의 컬럼 이름들을 가져옵니다.
+        columns = [desc[0] for desc in curs.description]
 
-        # 만약 주어진 id에 해당하는 데이터가 없다면, 404 오류를 반환합니다.
-        if not row:
-            return "Not Found", 404
+        result = []
+        # 반환된 행들을 순회하며,
+        # 각 행의 데이터와 컬럼 이름을 딕셔너리로 매핑하고 이를 결과 리스트에 추가합니다.
+        for row in rows:
+            row_dict = dict(zip(columns, row))
+            # datetime.date 객체를 문자열로 변환
+            result.append(row_dict)
+        # 최종적으로 생성된 딕셔너리 리스트를 JSON 형태로 반환합니다.
+        return jsonify(result)
 
-        current_value = row[0]
-        updated_value = current_value + 1
-        curs.execute("UPDATE trashform SET views=%s WHERE id=%s", (updated_value, id_data))
-        conn.commit()
-        conn.close()  # 연결을 종료합니다.
 
-        return jsonify({"updated_value": updated_value})
 #네이버뉴스 보내기
 @app.route('/news_send',methods=['GET'])
 def news():
@@ -490,6 +493,29 @@ def trashform_send():
                 trashform["image"],
                 current_date,
                 trashform["category"]
+
+            )
+            curs.execute(sql, val)
+
+    conn.commit()
+    return "Success"
+#블로그 캠페인 데이터 MySQL 저장
+@app.route('/insert/blog', methods=['POST', 'GET'])
+def blog_send():
+    curs = conn.cursor()
+    with open('C:/Users/kmg00/Desktop/out.json', 'r', encoding='utf-8') as f:
+        json_data = json.load(f)
+        # "blog_information" 키 아래에 있는 리스트를 순회
+        for blog in json_data["blog_information"]:
+            sql = """INSERT INTO blog_information(`id`,`blog_title`,`blog_time`,`blog_body`,`blog_reporter`,`blog_image`) 
+                     VALUES (%s,%s,%s,%s,%s,%s)"""
+            val = (
+                blog.get("id"),
+                blog.get("blog_title"),
+                blog.get("blog_time"),
+                blog.get("blog_body"),
+                blog.get("blog_reporter"),
+                blog.get("blog_image"),
             )
             curs.execute(sql, val)
 
