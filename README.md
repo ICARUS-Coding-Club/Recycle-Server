@@ -46,9 +46,9 @@
 
 ## 라이선스
 
-[Retrofit](https://square.github.io/retrofit/#license)    
-[Flask](https://flask-docs-kr.readthedocs.io/ko/latest/license.html)    
-[MySql](https://redresscompliance.com/mysql-license-a-complete-guide-to-licensing/)   
+[Retrofit : Apache License 2.0](https://square.github.io/retrofit/#license)    
+[Flask : BSD 3-Clause](https://flask.palletsprojects.com/en/3.0.x/license/)    
+[MySql : GPL 2.0](https://redresscompliance.com/mysql-license-a-complete-guide-to-licensing/)   
 
 <br/>
 
